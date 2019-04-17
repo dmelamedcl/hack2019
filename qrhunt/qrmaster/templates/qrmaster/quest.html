@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+	</head>
+	<body>
+        <div id="quest-show">
+            <h1>{{ quest.name }}</h1>
+        </div>
+		<div id="quest-edit">
+            <form method="post" action="{% url 'qrmaster:quest_edit' quest.pk %}">
+                {% csrf_token %}
+                <input type="text" name="name" value="{{ quest.name }}" placeholder="quest name" />
+                <input type="submit" value="save" />
+            </form>
+        </div>
+        <a href="{% url 'qrmaster:quest_delete' quest.id %}">Delete</a>
+        
+        {% if hints %}
+            <div id="show-view">
+                <ul>
+                    {% for hint in hints %}
+                        <li>
+                            <div id="hint-show">
+                                <p><b>{{ hint.title }}</b></p>
+                                <p>{{ hint.message }}</p>
+                                <p>url: {% url 'qrmaster:hint' hint.id %}</p>
+                                <a href="{% url 'qrmaster:hint_delete' hint.id %}">Delete</a>
+                            </div>
+                            <div id="hint-edit">
+                                <form method="post" action="{% url 'qrmaster:hint_edit' hint.id %}" >
+                                    {% csrf_token %}
+                                    <input name="title" placeholder="hint title" value="{{ hint.title }}" />
+                                    <input name="message" placeholder="hint message" value="{{ hint.message }}" />
+                                    <input type="submit" value="save" />
+                                </form>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% else %}
+            <p>No hint yet!</p>
+        {% endif %}
+        
+        <h1>Create a hint!</h1>
+        <form method="post" action="{% url 'qrmaster:hint_create' quest.pk %}">
+            {% csrf_token %}
+            <input type="text" name="title" placeholder="title" />
+            <input type="text" name="message" placeholder="message"/>
+            <input type="submit" />
+        </form>
+        
+        <a href="{% url 'qrmaster:index' %}">Back to homepage</a>
+        
+	</body>
+</html>
